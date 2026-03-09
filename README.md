@@ -167,6 +167,12 @@ search:
 | session | 会话记录 | 否 |
 | archive | 归档内容 | 否 |
 
+## 相关文档
+
+- [QUICKSTART.md](QUICKSTART.md) - 5分钟快速入门
+- [USAGE.md](USAGE.md) - 详细用法
+- [ARCHITECTURE.md](ARCHITECTURE.md) - 架构设计
+
 ## License
 
 MIT
