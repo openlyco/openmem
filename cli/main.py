@@ -259,7 +259,8 @@ def cmd_status(args):
 
 def cmd_add(args):
     """添加记忆"""
-    memory = MemoryManager(project_path=args.project)
+    project_path = args.project if args.project else os.getcwd()
+    memory = MemoryManager(project_path=project_path)
     
     memory_id = memory.add(
         content=args.content,
@@ -275,7 +276,8 @@ def cmd_add(args):
 
 def cmd_search(args):
     """搜索记忆"""
-    memory = MemoryManager(project_path=args.project)
+    project_path = args.project if args.project else os.getcwd()
+    memory = MemoryManager(project_path=project_path)
     
     results = memory.search(
         query=args.query,
@@ -301,7 +303,8 @@ def cmd_search(args):
 
 def cmd_list(args):
     """列出记忆"""
-    memory = MemoryManager(project_path=args.project)
+    project_path = args.project if args.project else os.getcwd()
+    memory = MemoryManager(project_path=project_path)
     
     results = memory.list(
         type=args.type,
@@ -325,7 +328,8 @@ def cmd_list(args):
 
 def cmd_page(args):
     """分页获取"""
-    memory = MemoryManager(project_path=args.project)
+    project_path = args.project if args.project else os.getcwd()
+    memory = MemoryManager(project_path=project_path)
     
     result = memory.page(
         page=args.page,

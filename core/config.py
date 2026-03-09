@@ -26,7 +26,7 @@ class MemoryConfig:
         if project_path:
             self.memory_dir = os.path.join(project_path, ".memory")
         else:
-            self.memory_dir = self.DEFAULT_GLOBAL_PATH
+            self.memory_dir = os.path.normpath(os.path.expanduser("~/.memory"))
         
         self.config_file = os.path.join(self.memory_dir, "config.yaml")
         self.config = self._load_config()
