@@ -54,7 +54,7 @@ def cmd_init(args):
     
     if template != "minimal":
         rules_path = os.path.join(memory_dir, "rules", "project.md")
-        rules_content = _generate_rules(project_name, template)
+        rules_content = _generate_rules(project_name, template, args.ide)
         with open(rules_path, 'w', encoding='utf-8') as f:
             f.write(rules_content)
     
@@ -121,8 +121,9 @@ def _generate_config(project_name: str, template: str, is_global: bool) -> dict:
     return config
 
 
-def _generate_rules(project_name: str, template: str) -> str:
-    """生成规则文件"""
+def _generate_rules(project_name: str, template: str, ide: str = "both") -> str:
+    """生成规则文件（支持 Trae 和 VS Code）"""
+    
     content = f"""# {project_name} 项目规则
 
 > 由 Memory 系统自动生成
@@ -132,6 +133,7 @@ def _generate_rules(project_name: str, template: str) -> str:
 - 项目名称: {project_name}
 - 创建时间: {datetime.now().strftime('%Y-%m-%d')}
 - 模板类型: {template}
+- 适配 IDE: {ide}
 
 """
     
@@ -158,9 +160,47 @@ def _generate_rules(project_name: str, template: str) -> str:
 | session | 会话记录 | 否 |
 | archive | 归档内容 | 否 |
 
-## 开发规范
+"""
 
-请参考项目文档...
+    # Trae Skill 格式
+    if ide in ("trae", "both"):
+        content += """
+---
+## Trae IDE 配置
+
+记忆文件位置: `.memory/rules/project.md`
+
+### 记忆类型说明
+
+- **decision**: 重要技术决策，如选择某技术栈、架构方案
+- **milestone**: 项目里程碑，如完成某个重要功能、发布版本
+- **issue**: 问题记录，如遇到的 bug、解决方案
+- **knowledge**: 知识文档，如学习笔记、技术总结
+
+"""
+    
+    # VS Code 格式
+    if ide in ("vscode", "both"):
+        content += """
+---
+## VS Code 配置
+
+### 项目文档
+
+记忆文件位置: `.memory/rules/project.md`
+
+### 使用方式
+
+1. 在 `.memory/` 目录中管理项目记忆
+2. 使用 `memory add` 命令添加记忆
+3. 使用 `memory search` 搜索记忆
+
+###记忆类型
+
+- decision: 重要技术决策
+- milestone: 项目里程碑  
+- issue: 问题记录
+- knowledge: 知识文档
 
 """
     
@@ -318,6 +358,8 @@ def main():
                            help='初始化全局 Memory (~/.memory)')
     parser_init.add_argument('--template', choices=['minimal', 'standard', 'full'],
                            help='选择模板')
+    parser_init.add_argument('--ide', choices=['trae', 'vscode', 'both'], default='both',
+                           help='适配的 IDE (默认 both)')
     parser_init.add_argument('--project-name', help='项目名称')
     parser_init.add_argument('--yes', '-y', action='store_true',
                            help='非交互模式')
