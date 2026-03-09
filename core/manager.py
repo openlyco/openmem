@@ -49,7 +49,9 @@ class MemoryManager:
             self.project_store = None
         
         self.global_config = MemoryConfig()
-        self.global_store = SQLiteStorage(self.global_config)
+        self.global_store = None
+        if os.path.exists(self.global_config.memory_dir):
+            self.global_store = SQLiteStorage(self.global_config)
     
     def add(self, content: str, type: str = "decision",
            tags: List[str] = None, metadata: dict = None,
@@ -95,7 +97,10 @@ class MemoryManager:
             if results:
                 return results
         
-        return self.global_store.search(query, limit)
+        if self.global_store:
+            return self.global_store.search(query, limit)
+        
+        return []
     
     def search_by_tags(self, tags: List[str], limit: int = 10, 
                       scope: str = "project") -> List[Dict[str, Any]]:
@@ -141,7 +146,8 @@ class MemoryManager:
         """关闭连接"""
         if self.project_store:
             self.project_store.close()
-        self.global_store.close()
+        if self.global_store:
+            self.global_store.close()
     
     def __enter__(self):
         return self
