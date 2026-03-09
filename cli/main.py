@@ -10,6 +10,7 @@ import yaml
 from datetime import datetime
 
 from memory import MemoryManager
+from memory.features.trigger import SmartTrigger
 
 
 def cmd_init(args):
@@ -262,9 +263,25 @@ def cmd_add(args):
     project_path = args.project if args.project else os.getcwd()
     memory = MemoryManager(project_path=project_path)
     
+    content = args.content
+    memory_type = args.type
+    
+    # 自动检测类型（如果未指定）
+    if not memory_type or memory_type == "auto":
+        trigger = SmartTrigger()
+        result = trigger.analyze(content)
+        if result.triggered:
+            memory_type = result.trigger_type.value
+            print(f"🔍 自动检测类型: {memory_type} (置信度: {result.confidence:.2f})")
+            if result.keywords:
+                print(f"   关键词: {', '.join(result.keywords)}")
+        else:
+            memory_type = "decision"
+            print(f"🔍 未检测到触发类型，默认使用 decision")
+    
     memory_id = memory.add(
-        content=args.content,
-        type=args.type,
+        content=content,
+        type=memory_type,
         tags=args.tags.split(',') if args.tags else None,
         priority=args.priority,
         scope=args.scope
@@ -378,7 +395,7 @@ def main():
     # add
     parser_add = subparsers.add_parser('add', help='添加记忆')
     parser_add.add_argument('content', help='记忆内容')
-    parser_add.add_argument('--type', default='decision', help='记忆类型')
+    parser_add.add_argument('--type', default='auto', help='记忆类型 (auto/decision/milestone/issue/knowledge)')
     parser_add.add_argument('--tags', help='标签（逗号分隔）')
     parser_add.add_argument('--priority', type=int, default=0, help='优先级')
     parser_add.add_argument('--scope', default='project', choices=['project', 'global'],
