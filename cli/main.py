@@ -293,7 +293,7 @@ def cmd_add(args):
 
 def cmd_record(args):
     """Record conversation to raw"""
-    from features.organizer import Organizer
+    from openmem.features.organizer import Organizer
 
     organizer = Organizer()
     session_id = organizer.add_message(role=args.role, content=args.content)
@@ -375,8 +375,8 @@ def cmd_page(args):
 
 def cmd_organize(args):
     """Organize meeting minutes"""
-    from features.organizer import Organizer, format_conversation, build_prompt, format_summary_md, parse_summary
-    from features.llm import get_llm_client
+    from openmem.features.organizer import Organizer, format_conversation, build_prompt, format_summary_md, parse_summary
+    from openmem.features.llm import get_llm_client
 
     organizer = Organizer()
 
@@ -424,7 +424,7 @@ def cmd_organize(args):
 
 def cmd_raw(args):
     """View raw records"""
-    from features.organizer import Organizer
+    from openmem.features.organizer import Organizer
 
     organizer = Organizer()
     date = args.date if args.date else datetime.now().strftime("%Y-%m-%d")
@@ -443,7 +443,7 @@ def cmd_raw(args):
 
 def cmd_summary(args):
     """View summaries"""
-    from features.organizer import Organizer
+    from openmem.features.organizer import Organizer
 
     organizer = Organizer()
     date = args.date if args.date else datetime.now().strftime("%Y-%m-%d")
