@@ -1,10 +1,10 @@
 """
-Memory 系统入口
+OpenMem - Memory System for AI-powered Development
 """
 
 __version__ = "2.0.0"
 
-from memory.core.manager import MemoryManager
-from memory.core.config import MemoryConfig
+from openmem.core.manager import MemoryManager
+from openmem.core.config import MemoryConfig
 
 __all__ = ["MemoryManager", "MemoryConfig", "__version__"]

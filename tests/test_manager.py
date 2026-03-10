@@ -2,7 +2,7 @@ import pytest
 import os
 import tempfile
 import shutil
-from memory.core.manager import MemoryManager
+from openmem.core.manager import MemoryManager
 
 
 class TestMemoryManager:

@@ -2,7 +2,7 @@ import pytest
 import os
 import tempfile
 import shutil
-from memory.core.config import MemoryConfig
+from openmem.core.config import MemoryConfig
 
 
 class TestMemoryConfig:

@@ -10,7 +10,7 @@ import threading
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
-from memory.core.config import MemoryConfig
+from openmem.core.config import MemoryConfig
 
 
 class SQLiteStorage:

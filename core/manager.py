@@ -6,8 +6,8 @@ Supports Global/Project layers, flexible like Poetry
 import os
 from typing import List, Dict, Any, Optional
 
-from memory.core.config import MemoryConfig
-from memory.storage import SQLiteStorage
+from openmem.core.config import MemoryConfig
+from openmem.storage import SQLiteStorage
 
 
 class MemoryManager:

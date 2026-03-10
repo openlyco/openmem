@@ -9,8 +9,8 @@ import argparse
 import yaml
 from datetime import datetime
 
-from memory import MemoryManager
-from memory.features.trigger import SmartTrigger
+from openmem import MemoryManager
+from openmem.features.trigger import SmartTrigger
 
 
 def cmd_init(args):
