@@ -291,6 +291,15 @@ def cmd_add(args):
     memory.close()
 
 
+def cmd_record(args):
+    """记录对话到 raw"""
+    from features.organizer import Organizer
+
+    organizer = Organizer()
+    session_id = organizer.add_message(role=args.role, content=args.content)
+    print(f"✅ 已记录到 raw: {session_id}")
+
+
 def cmd_search(args):
     """搜索记忆"""
     project_path = args.project if args.project else os.getcwd()
@@ -385,28 +394,56 @@ def cmd_organize(args):
 
     conversation = format_conversation(messages)
 
+    if args.auto:
+        print("\n🤖 自动调用 AI 整理中...")
+        print("(自动模式暂未实现)")
+        return
+
     prompt = build_prompt(conversation)
     print("\n" + "=" * 50)
-    print("📋 整理 Prompt（复制到 LLM）：")
+    print("📋 整理 Prompt：")
     print("=" * 50)
     print(prompt)
     print("=" * 50)
+    print("\n💡 使用 --auto 自动调用 AI 整理（暂未实现）")
 
-    print("\n💡 请将 LLM 返回的 JSON 粘贴到下方（直接回车跳过）：")
-    response = input("> ").strip()
 
-    if response:
-        summary = parse_summary(response)
-        summary.raw_count = len(messages)
+def cmd_raw(args):
+    """查看原始记录"""
+    from features.organizer import Organizer
 
-        if args.dry_run:
-            print("\n📄 预览纪要：")
-            print(format_summary_md(summary))
-        else:
-            filepath = organizer.save_summary(summary)
-            print(f"\n✅ 纪要已保存: {filepath}")
-    else:
-        print("\n⏭️ 跳过整理")
+    organizer = Organizer()
+    date = args.date if args.date else datetime.now().strftime("%Y-%m-%d")
+    messages = organizer.get_raw_messages(date=date)
+
+    if not messages:
+        print(f"没有找到 {date} 的记录")
+        return
+
+    print(f"📝 {date} 原始记录 (共 {len(messages)} 条)\n")
+    for i, msg in enumerate(messages[:args.limit]):
+        role = "👤 用户" if msg.role == "user" else "🤖 AI"
+        print(f"{i+1}. {role}")
+        print(f"   {msg.content[:100]}{'...' if len(msg.content) > 100 else ''}\n")
+
+
+def cmd_summary(args):
+    """查看纪要"""
+    from features.organizer import Organizer
+
+    organizer = Organizer()
+    date = args.date if args.date else datetime.now().strftime("%Y-%m-%d")
+    filepath = os.path.join(organizer.summaries_dir, f"{date}.md")
+
+    if not os.path.exists(filepath):
+        print(f"没有找到 {date} 的纪要")
+        return
+
+    with open(filepath, encoding="utf-8") as f:
+        content = f.read()
+
+    print(f"📋 {date} 会议纪要\n")
+    print(content)
 
 
 def main():
@@ -447,6 +484,11 @@ def main():
                           help='作用域')
     parser_add.add_argument('--project', help='项目路径')
     
+    # record - 自动记录对话
+    parser_record = subparsers.add_parser('record', help='记录对话到 raw')
+    parser_record.add_argument('--role', default='user', choices=['user', 'assistant'], help='角色')
+    parser_record.add_argument('content', help='对话内容')
+    
     # search
     parser_search = subparsers.add_parser('search', help='搜索记忆')
     parser_search.add_argument('query', help='搜索关键词')
@@ -481,6 +523,16 @@ def main():
     parser_org.add_argument('--days', type=int, default=1, help='最近 N 天')
     parser_org.add_argument('--session', help='指定会话 ID')
     parser_org.add_argument('--dry-run', action='store_true', help='仅预览，不保存')
+    parser_org.add_argument('--auto', action='store_true', help='自动调用 AI 整理')
+    
+    # raw
+    parser_raw = subparsers.add_parser('raw', help='查看原始记录')
+    parser_raw.add_argument('--date', help='日期 (YYYY-MM-DD，默认今天)')
+    parser_raw.add_argument('--limit', type=int, default=50, help='显示条数')
+    
+    # summary
+    parser_summary = subparsers.add_parser('summary', help='查看纪要')
+    parser_summary.add_argument('--date', help='日期 (YYYY-MM-DD，默认今天)')
     
     args = parser.parse_args()
     
@@ -492,10 +544,13 @@ def main():
         'init': cmd_init,
         'status': cmd_status,
         'add': cmd_add,
+        'record': cmd_record,
         'search': cmd_search,
         'list': cmd_list,
         'page': cmd_page,
         'organize': cmd_organize,
+        'raw': cmd_raw,
+        'summary': cmd_summary,
     }
     
     commands[args.command](args)
