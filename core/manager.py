@@ -67,13 +67,8 @@ class MemoryManager:
            tags: List[str] = None, metadata: dict = None,
            priority: int = 0, scope: str = "project") -> int:
         """Add memory"""
-        if scope == "global":
-            return self.global_store.create(type, content, metadata, tags, priority)
-        else:
-            if self.project_store:
-                return self.project_store.create(type, content, metadata, tags, priority)
-            else:
-                return self.global_store.create(type, content, metadata, tags, priority)
+        store = self._get_store(scope)
+        return store.create(type, content, metadata, tags, priority)
     
     def get(self, memory_id: int, scope: str = "project") -> Optional[Dict[str, Any]]:
         """Get memory"""
@@ -168,18 +163,31 @@ class MemoryManager:
         
         return stats
     
+    def count(self, scope: str = "both") -> int:
+        """Get total count of memories"""
+        total = 0
+        if scope in ("project", "both"):
+            if self.project_store:
+                total += self.project_store.get_stats()["total"]
+        if scope in ("global", "both"):
+            if self.global_store:
+                total += self.global_store.get_stats()["total"]
+        return total
+    
     def _get_store(self, scope: str):
         """Get storage by scope"""
         if scope == "global":
             if not self.global_store:
-                raise ValueError("Global memory not initialized")
+                raise ValueError("Global memory not initialized. Run 'omem init --global' first.")
             return self.global_store
-        else:
+        elif scope == "project":
             if not self.project_store:
-                if not self.global_store:
-                    raise ValueError("No memory initialized")
-                return self.global_store
+                raise ValueError(
+                    "Project memory not initialized. Run 'omem init' in your project directory first."
+                )
             return self.project_store
+        else:
+            raise ValueError(f"Invalid scope: {scope}. Use 'project' or 'global'.")
     
     def close(self):
         """Close connections"""

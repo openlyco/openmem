@@ -29,6 +29,8 @@ setup(
     install_requires=[
         "pyyaml>=5.0",
         "jieba>=0.42",
+        "cryptography>=3.0",
+        "requests>=2.28",
     ],
     entry_points={
         "console_scripts": [

@@ -10,6 +10,8 @@ import threading
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
+import jieba
+
 from .base import MemoryBackend, MemoryType
 
 
@@ -174,7 +176,6 @@ class SQLiteMemoryBackend(MemoryBackend):
     
     def _tokenize(self, content: str) -> str:
         """Tokenize text"""
-        import jieba
         tokens = list(jieba.cut(content))
         return ' '.join([t.strip().lower() for t in tokens if t.strip()])
     
@@ -321,7 +322,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         cursor = conn.cursor()
         
         conditions = ' OR '.join(['tags LIKE ?' for _ in tags])
-        params = [f'%{tag}%' for tag in tags] + [limit]
+        params = [f'%"{tag}"%' for tag in tags] + [limit]
         
         cursor.execute(f"""
             SELECT DISTINCT id, type, content, metadata, tags, priority, 
@@ -411,11 +412,21 @@ class SQLiteMemoryBackend(MemoryBackend):
         cursor.execute("SELECT COUNT(*) FROM memories")
         return cursor.fetchone()[0]
     
+    def get_stats(self) -> Dict[str, Any]:
+        """Get statistics"""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT COUNT(*) FROM memories")
+        total = cursor.fetchone()[0]
+        
+        cursor.execute("SELECT type, COUNT(*) as count FROM memories GROUP BY type")
+        by_type = {row[0]: row[1] for row in cursor.fetchall()}
+        
+        return {"total": total, "by_type": by_type}
+    
     def close(self):
         """Close connection"""
         if hasattr(self._local, 'conn') and self._local.conn:
             self._local.conn.close()
             self._local.conn = None
-
-
-import jieba

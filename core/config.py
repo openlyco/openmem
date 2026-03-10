@@ -32,8 +32,16 @@ class MemoryConfig:
         self.config = self._load_config()
     
     def _load_config(self) -> Dict[str, Any]:
-        """Load config with inheritance"""
-        base_config = {
+        """Load and merge config with inheritance"""
+        base_config = self._load_default_config()
+        user_config = self._load_single_config(self.config_file, visited=set())
+        config = self._merge_config(base_config, user_config)
+        self._validate_config(config)
+        return config
+    
+    def _load_default_config(self) -> Dict[str, Any]:
+        """Load default config"""
+        return {
             'version': '0.1.1',
             'project': {'name': ''},
             'memory_types': {
@@ -59,33 +67,42 @@ class MemoryConfig:
                 'max_backups': 7,
             }
         }
-        
-        if os.path.exists(self.config_file):
-            try:
-                with open(self.config_file, 'r', encoding='utf-8') as f:
-                    user_config = yaml.safe_load(f)
-                    if user_config:
-                        if 'extends' in user_config:
-                            extends_path = os.path.expanduser(user_config['extends'])
-                            if os.path.exists(extends_path):
-                                parent_config = self._load_single_config(extends_path)
-                                base_config = self._merge_config(parent_config, user_config)
-                            else:
-                                base_config = self._merge_config(base_config, user_config)
-                        else:
-                            base_config = self._merge_config(base_config, user_config)
-            except Exception as e:
-                print(f"Warning: Failed to load config: {e}")
-        
-        return base_config
     
-    def _load_single_config(self, path: str) -> Dict[str, Any]:
-        """Load single config file"""
+    def _load_single_config(self, path: str, visited: set = None) -> Dict[str, Any]:
+        """Load single config file with circular dependency detection"""
+        if visited is None:
+            visited = set()
+        
+        abs_path = os.path.abspath(os.path.expanduser(path))
+        if abs_path in visited:
+            raise ValueError(f"Circular config inheritance detected: {path}")
+        visited.add(abs_path)
+        
         try:
             with open(path, 'r', encoding='utf-8') as f:
-                return yaml.safe_load(f) or {}
-        except:
+                config = yaml.safe_load(f) or {}
+        except Exception:
             return {}
+        
+        if 'extends' in config:
+            extends_path = os.path.expanduser(config['extends'])
+            if os.path.exists(extends_path):
+                parent_config = self._load_single_config(extends_path, visited)
+                config = self._merge_config(parent_config, config)
+        
+        return config
+    
+    def _validate_config(self, config: Dict[str, Any]) -> None:
+        """Validate config values"""
+        storage = config.get('storage', {})
+        
+        busy_timeout = storage.get('busy_timeout')
+        if busy_timeout is not None and busy_timeout <= 0:
+            raise ValueError(f"busy_timeout must be positive, got: {busy_timeout}")
+        
+        wal_mode = storage.get('wal_mode')
+        if wal_mode is not None and not isinstance(wal_mode, bool):
+            raise ValueError(f"wal_mode must be boolean, got: {wal_mode}")
     
     def _merge_config(self, base: Dict, override: Dict) -> Dict:
         """Deep merge config"""
