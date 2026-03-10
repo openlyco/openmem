@@ -54,7 +54,7 @@ We follow these coding standards:
 - **Google Style** - 文档字符串
 - **类型提示** - 函数签名必须
 - **VNPY 风格** - 数据用类封装，可读性优先
-- **OpenAlgo 实践** - 内部项目经验沉淀
+- **AlphaAlgo 实践** - 内部项目经验沉淀
 
 ## 代码审查原则
 
