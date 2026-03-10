@@ -148,12 +148,13 @@ The goal: Not just consuming AI, but **building with it**.
 ## Architecture
 
 ```mermaid
-graph LR
-    A[User Input] --> B[CLI / Python API]
-    B --> C[Memory Manager]
-    C --> D{Scope}
-    D -->|Project| E[Project DB (.memory/)]
-    D -->|Global| F[Global DB (~/.memory/)]
+graph TD
+    A[User Input] --> B{CLI or API}
+    B -->|CLI| C[Memory Manager]
+    B -->|API| C
+    C --> D{Scope Check}
+    D -->|Project| E[Project DB<br/>.memory/]
+    D -->|Global| F[Global DB<br/>~/.memory/]
     E --> G[SQLite + FTS5]
     F --> G
     G --> H[BM25 Ranking]
