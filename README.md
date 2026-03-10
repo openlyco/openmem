@@ -103,10 +103,70 @@ The goal: Not just consuming AI, but **building with it**.
 - 📦 **Template Init** - minimal / standard / full
 - ⚙️ **Config Inheritance** - extends global config
 - 📝 **Rules Generation** - Auto-generate IDE-readable rules
-- 🔒 **Encrypted Backup** - Local encrypted storage
-- ⏮️ **Version Control** - Git-like versioning
-- 🖥️ **Dual IDE Support** - Trae IDE + VS Code
-- ⚡ **Zero Dependencies** - SQLite only, ready out of the box
+- 🔒 **Encrypted Backup** - Local encrypted storage (future)
+- ⏮️ **Version Control** - Git-like versioning (future)
+- 🖥️ **IDE Support** - Trae IDE + VS Code
+
+---
+
+## Security & Privacy
+
+**Data Storage**
+- All data is stored **locally** on your machine
+- Raw data in SQLite database (plain text for fast FTS5 search)
+- **No data is ever sent to external servers**
+
+**Backup**
+- Encrypted backup feature is planned for future release
+- Encryption algorithm: Fernet (symmetric encryption)
+- Key management: User-provided passphrase
+
+**Privacy**
+- Zero network requests by default
+- Your data stays on your machine
+- You control when and how to share
+
+---
+
+## Current Status
+
+| Feature | Status | Notes |
+|:---|:---:|:---|
+| CLI (init/add/search/list/status) | ✅ Done | Core commands working |
+| Project/Global layers | ✅ Done | Like Poetry config |
+| Full-text search (FTS5 + BM25) | ✅ Done | jieba for Chinese |
+| Config inheritance | ✅ Done | extends global config |
+| Template init | ✅ Done | minimal/standard/full |
+| Python API | ✅ Done | from openmem import |
+| Encrypted backup | 🔜 Planned | v0.2 |
+| Git-like version control | 🔜 Planned | v0.2 |
+| IDE rules auto-generation | 🔜 In Progress | Trae/VS Code support |
+| LLM summarization | 🔜 Planned | v0.3 |
+
+---
+
+## Architecture
+
+```mermaid
+graph LR
+    A[User Input] --> B[CLI / Python API]
+    B --> C[Memory Manager]
+    C --> D{Scope}
+    D -->|Project| E[Project DB (.memory/)]
+    D -->|Global| F[Global DB (~/.memory/)]
+    E --> G[SQLite + FTS5]
+    F --> G
+    G --> H[BM25 Ranking]
+    H --> I[Search Results]
+```
+
+**Data Flow:**
+1. User input via CLI or Python API
+2. Memory Manager routes to Project or Global layer
+3. Data stored in local SQLite with FTS5 index
+4. Search uses BM25 for relevance ranking
+
+---
 
 ## Installation
 
