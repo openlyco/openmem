@@ -1,6 +1,6 @@
 # OpenMem
 
-Project-level memory system for AI-powered development.
+# Project-level Memory system for AI-powered development.
 
 ## Why OpenMem?
 
@@ -126,41 +126,41 @@ pip install -e .
 
 ```bash
 # Project-level Memory
-memory init
+omem init
 
 # Global Memory (shared across projects)
-memory init --global
+omem init --global
 
 # Select template
-memory init --template=standard
-memory init --template=full
+omem init --template=standard
+omem init --template=full
 
 # Non-interactive mode
-memory init -y
+omem init -y
 ```
 
 ### Basic Usage
 
 ```bash
 # Add memory
-memory add "Use JWT for authentication" --type decision --tags auth,security
+omem add "Use JWT for authentication" --type decision --tags auth,security
 
 # Search
-memory search auth
-memory search auth --scope both
+omem search auth
+omem search auth --scope both
 
 # List
-memory list --type decision
+omem list --type decision
 
 # Status
-memory status
-memory status -v
+omem status
+omem status -v
 ```
 
 ### Python API
 
 ```python
-from memory import MemoryManager
+from openmem import MemoryManager
 
 # Auto-select (project first)
 memory = MemoryManager()

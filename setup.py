@@ -33,7 +33,7 @@ setup(
     entry_points={
         "console_scripts": [
             "openmem=openmem.cli.main:main",
-            "mem=openmem.cli.main:main",
+            "omem=openmem.cli.main:main",
         ],
     },
     package_data={

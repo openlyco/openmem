@@ -6,46 +6,46 @@
 
 ```bash
 # Interactive mode
-memory init
+omem init
 
 # Non-interactive mode
-memory init -y
+omem init -y
 
 # Specify project path
-memory init /path/to/project
+omem init /path/to/project
 
 # Global Memory (shared across projects)
-memory init --global
+omem init --global
 
 # Select template
-memory init --template=minimal   # Minimal config
-memory init --template=standard  # Standard config
-memory init --template=full      # Full config
+omem init --template=minimal   # Minimal config
+omem init --template=standard  # Standard config
+omem init --template=full      # Full config
 
 # Specify project name
-memory init --project-name myapp
+omem init --project-name myapp
 ```
 
 ### add - Add Memory
 
 ```bash
 # Auto-detect type (recommended)
-memory add "We decided to use PostgreSQL"
+omem add "We decided to use PostgreSQL"
 
 # Specify type
-memory add "Completed login feature" --type milestone
+omem add "Completed login feature" --type milestone
 
 # Add tags
-memory add "Use JWT for authentication" --tags auth,jwt
+omem add "Use JWT for authentication" --tags auth,jwt
 
 # Specify priority (0-10)
-memory add "Important decision" --priority 8
+omem add "Important decision" --priority 8
 
 # Specify scope
-memory add "Global knowledge" --scope global
+omem add "Global knowledge" --scope global
 
 # Full example
-memory add "Use Redis for caching" --type knowledge --tags redis,cache --priority 5
+omem add "Use Redis for caching" --type knowledge --tags redis,cache --priority 5
 ```
 
 **Type Reference:**
@@ -60,47 +60,47 @@ memory add "Use Redis for caching" --type knowledge --tags redis,cache --priorit
 
 ```bash
 # Keyword search
-memory search PostgreSQL
+omem search PostgreSQL
 
 # Limit results
-memory search database --limit 5
+omem search database --limit 5
 
 # Tag search
-memory search --tag auth
+omem search --tag auth
 
 # Project path
-memory search JWT --project /path/to/project
+omem search JWT --project /path/to/project
 ```
 
 ### list - List
 
 ```bash
 # All memories
-memory list
+omem list
 
 # Filter by type
-memory list --type decision
-memory list --type milestone
+omem list --type decision
+omem list --type milestone
 
 # Limit
-memory list --limit 50
+omem list --limit 50
 ```
 
 ### page - Pagination
 
 ```bash
 # First page, 20 items per page
-memory page --page 0
+omem page --page 0
 
 # Specific page and size
-memory page --page 2 --page-size 50
+omem page --page 2 --page-size 50
 ```
 
 ### status - Status
 
 ```bash
 # Show Memory status
-memory status
+omem status
 ```
 
 ---
@@ -110,13 +110,13 @@ memory status
 ### Basic Usage
 
 ```python
-from memory import MemoryManager
+from openmem import MemoryManager
 
 # Project-level
-memory = MemoryManager(project_path="/path/to/project")
+omem = MemoryManager(project_path="/path/to/project")
 
 # Or global
-memory = MemoryManager()
+omem = MemoryManager()
 ```
 
 ### Add Memory
@@ -177,7 +177,7 @@ memory.close()
 When adding memory, the system automatically analyzes content and detects type:
 
 ```bash
-memory add "We decided to use JWT for authentication"
+omem add "We decided to use JWT for authentication"
 # Output:
 # 🔍 Auto-detected type: decision (confidence: 0.70)
 #    Keywords: 决定
