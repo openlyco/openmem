@@ -376,6 +376,7 @@ def cmd_page(args):
 def cmd_organize(args):
     """整理会议纪要"""
     from features.organizer import Organizer, format_conversation, build_prompt, format_summary_md, parse_summary
+    from features.llm import get_llm_client
 
     organizer = Organizer()
 
@@ -393,19 +394,32 @@ def cmd_organize(args):
     print(f"📝 共 {len(messages)} 条原始消息")
 
     conversation = format_conversation(messages)
+    prompt = build_prompt(conversation)
 
     if args.auto:
         print("\n🤖 自动调用 AI 整理中...")
-        print("(自动模式暂未实现)")
+        try:
+            llm = get_llm_client(provider=args.llm)
+            response = llm.chat(prompt)
+            
+            summary = parse_summary(response)
+            summary.raw_count = len(messages)
+            
+            filepath = organizer.save_summary(summary)
+            print(f"\n✅ 纪要已保存: {filepath}")
+            print("\n📄 预览：")
+            print(format_summary_md(summary))
+        except Exception as e:
+            print(f"\n❌ 调用失败: {e}")
+            print("请检查配置或使用 --llm 指定其他模型")
         return
 
-    prompt = build_prompt(conversation)
     print("\n" + "=" * 50)
     print("📋 整理 Prompt：")
     print("=" * 50)
     print(prompt)
     print("=" * 50)
-    print("\n💡 使用 --auto 自动调用 AI 整理（暂未实现）")
+    print("\n💡 使用 --auto 自动调用 AI 整理")
 
 
 def cmd_raw(args):
@@ -524,6 +538,8 @@ def main():
     parser_org.add_argument('--session', help='指定会话 ID')
     parser_org.add_argument('--dry-run', action='store_true', help='仅预览，不保存')
     parser_org.add_argument('--auto', action='store_true', help='自动调用 AI 整理')
+    parser_org.add_argument('--llm', default='ollama', choices=['ollama', 'deepseek', 'openai'],
+                        help='LLM 提供商 (默认 ollama 本地免费)')
     
     # raw
     parser_raw = subparsers.add_parser('raw', help='查看原始记录')
