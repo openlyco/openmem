@@ -69,7 +69,7 @@ def cmd_init(args):
 def _generate_config(project_name: str, template: str, is_global: bool) -> dict:
     """生成配置"""
     config = {
-        'version': '2.0.0',
+        'version': '0.1.1',
     }
     
     if not is_global:

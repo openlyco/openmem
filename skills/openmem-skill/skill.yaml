@@ -11,7 +11,7 @@ description: |
   - Maintain project-specific knowledge base
   - Organize meeting notes automatically
 
-version: 2.0.0
+version: 0.1.1
 author: OpenAlgo
 homepage: https://github.com/jcgokart/openmem
 

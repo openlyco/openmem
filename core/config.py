@@ -34,7 +34,7 @@ class MemoryConfig:
     def _load_config(self) -> Dict[str, Any]:
         """加载配置（支持继承） / Load config with inheritance"""
         base_config = {
-            'version': '2.0.0',
+            'version': '0.1.1',
             'project': {'name': ''},
             'memory_types': {
                 'decision': {'sync_to_global': False},
