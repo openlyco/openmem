@@ -180,7 +180,7 @@ When adding memory, the system automatically analyzes content and detects type:
 omem add "We decided to use JWT for authentication"
 # Output:
 # 🔍 Auto-detected type: decision (confidence: 0.70)
-#    Keywords: 决定
+#    Keywords: decide, decide to use
 # ✅ Memory added: ID=1
 ```
 

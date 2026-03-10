@@ -1,5 +1,5 @@
 """
-Memory 核心模块
+Memory Core Module
 """
 
 from .manager import MemoryManager, MemoryConfig

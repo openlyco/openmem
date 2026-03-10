@@ -1,192 +1,199 @@
 """
-Memory 存储层抽象接口
-定义统一的存储后端接口，支持多实现切换
+Memory Storage Layer Abstract Interface
+Defines unified storage backend interface, supports multiple implementations
 """
 
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional
-from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 
 
 class MemoryType(Enum):
-    """记忆类型"""
+    """Memory type"""
     DECISION = "decision"
     MILESTONE = "milestone"
-    ISSUE = "issue"
     KNOWLEDGE = "knowledge"
+    CONVERSATION = "conversation"
     ARCHIVE = "archive"
-    SESSION = "session"
-    LONGTERM = "longterm"
-    WORK = "work"
 
 
-@dataclass
-class Memory:
-    """记忆数据结构"""
-    id: int
-    type: str
-    content: str
-    metadata: Dict[str, Any] = None
-    tags: List[str] = None
-    priority: int = 0
-    created_at: str = None
-    updated_at: str = None
-    expires_at: str = None
-    version: int = 1
+class MemoryData:
+    """Memory data structure"""
+
+    def __init__(self,
+                 id: Optional[int] = None,
+                 type: str = "",
+                 content: str = "",
+                 metadata: Dict[str, Any] = None,
+                 tags: List[str] = None,
+                 priority: int = 0,
+                 created_at: Optional[datetime] = None,
+                 updated_at: Optional[datetime] = None,
+                 expires_at: Optional[datetime] = None,
+                 version: int = 1):
+        self.id = id
+        self.type = type
+        self.content = content
+        self.metadata = metadata or {}
+        self.tags = tags or []
+        self.priority = priority
+        self.created_at = created_at
+        self.updated_at = updated_at
+        self.expires_at = expires_at
+        self.version = version
 
 
 class MemoryBackend(ABC):
     """
-    记忆存储抽象接口
-    
-    使用示例：
-        class SQLiteMemory(MemoryBackend):
-            def create(self, type, content, **kwargs):
-                ...
-        
-        backend = SQLiteMemory(config)
-        memory_id = backend.create("decision", "使用 JWT 认证")
+    Memory storage abstract interface
+
+    Usage example:
+        backend = SQLiteMemoryBackend(config)
+        memory_id = backend.create("decision", "Use JWT for authentication")
+        memory = backend.read(memory_id)
+        backend.update(memory_id, content="Updated content")
+        backend.delete(memory_id)
     """
-    
+
     @abstractmethod
-    def create(self, type: str, content: str, 
+    def create(self, type: str, content: str,
                metadata: dict = None, tags: List[str] = None,
                priority: int = 0, expires_at: str = None) -> int:
         """
-        创建记忆
-        
+        Create memory
+
         Args:
-            type: 记忆类型
-            content: 记忆内容
-            metadata: 元数据
-            tags: 标签
-            priority: 优先级
-            expires_at: 过期时间
-        
+            type: Memory type
+            content: Memory content
+            metadata: Metadata
+            tags: Tags
+            priority: Priority
+            expires_at: Expiration time
+
         Returns:
-            记忆 ID
+            Memory ID
         """
         pass
-    
+
     @abstractmethod
     def read(self, memory_id: int) -> Optional[Dict[str, Any]]:
         """
-        读取记忆
-        
+        Read memory
+
         Args:
-            memory_id: 记忆 ID
-        
+            memory_id: Memory ID
+
         Returns:
-            记忆字典，不存在返回 None
+            Memory dict, returns None if not found
         """
         pass
-    
+
     @abstractmethod
     def update(self, memory_id: int, content: str = None,
-               metadata: dict = None, tags: List[str] = None,
-               priority: int = None) -> bool:
+              metadata: dict = None, tags: List[str] = None,
+              priority: int = None) -> bool:
         """
-        更新记忆
-        
+        Update memory
+
         Args:
-            memory_id: 记忆 ID
-            content: 新内容
-            metadata: 新元数据
-            tags: 新标签
-            priority: 新优先级
-        
+            memory_id: Memory ID
+            content: New content
+            metadata: New metadata
+            tags: New tags
+            priority: New priority
+
         Returns:
-            是否成功
+            Whether successful
         """
         pass
-    
+
     @abstractmethod
     def delete(self, memory_id: int) -> bool:
         """
-        删除记忆
-        
+        Delete memory
+
         Args:
-            memory_id: 记忆 ID
-        
+            memory_id: Memory ID
+
         Returns:
-            是否成功
+            Whether successful
         """
         pass
-    
+
     @abstractmethod
     def search(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
         """
-        全文搜索
-        
+        Full-text search
+
         Args:
-            query: 搜索关键词
-            limit: 限制数量
-        
+            query: Search keyword
+            limit: Limit count
+
         Returns:
-            搜索结果列表
+            Search result list
         """
         pass
-    
+
     @abstractmethod
     def search_by_tags(self, tags: List[str], limit: int = 10) -> List[Dict[str, Any]]:
         """
-        按标签搜索
-        
+        Search by tags
+
         Args:
-            tags: 标签列表
-            limit: 限制数量
-        
+            tags: Tag list
+            limit: Limit count
+
         Returns:
-            搜索结果列表
+            Search result list
         """
         pass
-    
+
     @abstractmethod
-    def list_by_type(self, type: str, limit: int = 100, 
+    def list_by_type(self, type: str = None, limit: int = 100,
                     offset: int = 0) -> List[Dict[str, Any]]:
         """
-        按类型列出记忆
-        
+        List memories by type
+
         Args:
-            type: 记忆类型
-            limit: 限制数量
-            offset: 偏移量
-        
+            type: Memory type
+            limit: Limit count
+            offset: Offset
+
         Returns:
-            记忆列表
+            Memory list
         """
         pass
-    
+
     @abstractmethod
     def get_messages_page(self, page: int = 0, page_size: int = 100,
                          memory_type: str = None) -> Dict[str, Any]:
         """
-        分页获取记忆
-        
+        Get memories by page
+
         Args:
-            page: 页码（从 0 开始）
-            page_size: 每页大小
-            memory_type: 类型过滤
-        
+            page: Page number (starting from 0)
+            page_size: Page size
+            memory_type: Type filter
+
         Returns:
-            分页结果
+            Paginated result
         """
         pass
-    
+
     @abstractmethod
     def get_memory_count(self) -> int:
         """
-        获取记忆总数
-        
+        Get total memory count
+
         Returns:
-            记忆数量
+            Memory count
         """
         pass
-    
+
     @abstractmethod
     def close(self):
         """
-        关闭连接
+        Close connection
         """
         pass

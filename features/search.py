@@ -221,21 +221,21 @@ if __name__ == "__main__":
     print("Enhanced Search Test")
     print("=" * 60)
     
-    print("\n【Chinese Tokenization Test】")
-    text = "决定使用微服务架构"
+    print("\n[Chinese Tokenization Test]")
+    text = "Decided to use microservices architecture"
     tokens = ChineseTokenizer.tokenize(text)
     print(f"Text: {text}")
     print(f"Tokens: {tokens}")
     
-    text = "决定使用单体架构"
+    text = "Decided to use monolithic architecture"
     tokens = ChineseTokenizer.tokenize(text)
     print(f"Text: {text}")
     print(f"Tokens: {tokens}")
     
-    print("\n【FTS5 Format Test】")
-    fts_text = ChineseTokenizer.tokenize_for_fts("决定使用微服务架构")
+    print("\n[FTS5 Format Test]")
+    fts_text = ChineseTokenizer.tokenize_for_fts("Decided to use microservices architecture")
     print(f"FTS5 Format: {fts_text}")
     
     print("\n" + "=" * 60)
-    print("✓ Test Complete")
+    print("Test Complete")
     print("=" * 60)

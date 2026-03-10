@@ -1,5 +1,5 @@
 """
-Memory CLI 模块
+Memory CLI Module
 """
 
 __all__ = ["main"]

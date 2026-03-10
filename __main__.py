@@ -1,6 +1,6 @@
 """
-Memory CLI 入口
-python -m memory
+Memory CLI Entry Point
+python -m openmem
 """
 
 from openmem.cli.main import main

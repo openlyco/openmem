@@ -1,6 +1,6 @@
 """
-Memory SQLite 存储实现
-基于现有 pilot_d_Memory 优化版本
+Memory SQLite Storage Implementation
+Optimized version based on pilot_d_Memory
 """
 
 import sqlite3
@@ -14,8 +14,8 @@ from .base import MemoryBackend, MemoryType
 
 
 class SQLiteConfig:
-    """SQLite 配置"""
-    
+    """SQLite Config"""
+
     def __init__(self, db_path: str, enable_fts: bool = True,
                  wal_mode: bool = True, busy_timeout: int = 30000):
         self.db_path = db_path
@@ -26,22 +26,22 @@ class SQLiteConfig:
 
 class SQLiteMemoryBackend(MemoryBackend):
     """
-    SQLite 存储后端实现
-    
-    特性：
-    - SQLite + WAL 模式（高性能、并发安全）
-    - FTS5 全文搜索（预分词存储）
-    - 事务支持
-    - 版本控制
+    SQLite Storage Backend Implementation
+
+    Features:
+    - SQLite + WAL mode (high performance, concurrent safe)
+    - FTS5 full-text search (pre-tokenized storage)
+    - Transaction support
+    - Version control
     """
-    
+
     def __init__(self, config: SQLiteConfig):
         self.config = config
         self._local = threading.local()
         self._init_database()
-    
+
     def _get_connection(self) -> sqlite3.Connection:
-        """获取线程本地连接"""
+        """Get thread-local connection"""
         if not hasattr(self._local, 'conn') or self._local.conn is None:
             os.makedirs(os.path.dirname(self.config.db_path), exist_ok=True)
             conn = sqlite3.connect(
@@ -53,21 +53,21 @@ class SQLiteMemoryBackend(MemoryBackend):
             self._local.conn = conn
             self._configure_connection(conn)
         return self._local.conn
-    
+
     def _configure_connection(self, conn: sqlite3.Connection):
-        """配置连接"""
+        """Configure connection"""
         cursor = conn.cursor()
         cursor.execute(f"PRAGMA busy_timeout={self.config.busy_timeout}")
-        
+
         if self.config.wal_mode:
             cursor.execute("PRAGMA journal_mode=WAL")
-        
+
         cursor.execute("PRAGMA synchronous=NORMAL")
         cursor.execute("PRAGMA temp_store=MEMORY")
         cursor.execute("PRAGMA foreign_keys=ON")
-    
+
     def _init_database(self):
-        """初始化数据库"""
+        """Initialize database"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -158,7 +158,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         conn.commit()
     
     def _row_to_dict(self, row) -> Dict[str, Any]:
-        """行转字典"""
+        """Convert row to dict"""
         return {
             'id': row[0],
             'type': row[1],
@@ -173,7 +173,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         }
     
     def _tokenize(self, content: str) -> str:
-        """中文分词"""
+        """Tokenize text"""
         import jieba
         tokens = list(jieba.cut(content))
         return ' '.join([t.strip().lower() for t in tokens if t.strip()])
@@ -181,7 +181,7 @@ class SQLiteMemoryBackend(MemoryBackend):
     def create(self, type: str, content: str,
                metadata: dict = None, tags: List[str] = None,
                priority: int = 0, expires_at: str = None) -> int:
-        """创建记忆"""
+        """Create memory"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -204,7 +204,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         return cursor.lastrowid
     
     def read(self, memory_id: int) -> Optional[Dict[str, Any]]:
-        """读取记忆"""
+        """Read memory"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -220,7 +220,7 @@ class SQLiteMemoryBackend(MemoryBackend):
     def update(self, memory_id: int, content: str = None,
               metadata: dict = None, tags: List[str] = None,
               priority: int = None) -> bool:
-        """更新记忆"""
+        """Update memory"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -259,7 +259,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         return cursor.rowcount > 0
     
     def delete(self, memory_id: int) -> bool:
-        """删除记忆"""
+        """Delete memory"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -269,7 +269,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         return cursor.rowcount > 0
     
     def search(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
-        """全文搜索"""
+        """Full-text search"""
         if not self.config.enable_fts:
             return self._search_like_fallback(query, limit)
         
@@ -300,7 +300,7 @@ class SQLiteMemoryBackend(MemoryBackend):
             raise
     
     def _search_like_fallback(self, query: str, limit: int) -> List[Dict[str, Any]]:
-        """LIKE 搜索回退"""
+        """LIKE search fallback"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -316,7 +316,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         return [self._row_to_dict(row) for row in cursor.fetchall()]
     
     def search_by_tags(self, tags: List[str], limit: int = 10) -> List[Dict[str, Any]]:
-        """按标签搜索"""
+        """Search by tags"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -336,7 +336,7 @@ class SQLiteMemoryBackend(MemoryBackend):
     
     def list_by_type(self, type: str, limit: int = 100,
                     offset: int = 0) -> List[Dict[str, Any]]:
-        """按类型列出"""
+        """List by type"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -353,7 +353,7 @@ class SQLiteMemoryBackend(MemoryBackend):
     
     def get_messages_page(self, page: int = 0, page_size: int = 100,
                          memory_type: str = None) -> Dict[str, Any]:
-        """分页获取"""
+        """Get messages by page"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -395,7 +395,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         }
     
     def get_memory_count(self) -> int:
-        """获取记忆总数"""
+        """Get total memory count"""
         conn = self._get_connection()
         cursor = conn.cursor()
         
@@ -403,7 +403,7 @@ class SQLiteMemoryBackend(MemoryBackend):
         return cursor.fetchone()[0]
     
     def close(self):
-        """关闭连接"""
+        """Close connection"""
         if hasattr(self._local, 'conn') and self._local.conn:
             self._local.conn.close()
             self._local.conn = None

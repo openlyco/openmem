@@ -192,28 +192,28 @@ if __name__ == "__main__":
     trigger = SmartTrigger()
     
     test_cases = [
-        ("决定使用 SQLite 作为存储引擎", True),
+        ("Decided to use SQLite as storage engine", True),
         ("we decided to use PostgreSQL", True),
-        ("完成了第一阶段开发", True),
+        ("Completed first phase development", True),
         ("completed first phase", True),
-        ("这个决策非常重要", True),
+        ("This decision is very important", True),
         ("very important decision", True),
-        ("记录一下今天的进度", True),
+        ("Record today's progress", True),
         ("take a note", True),
-        ("这个决策不重要", False),
+        ("This decision is not important", False),
         ("not important", False),
-        ("不要记录这个", False),
+        ("Don't record this", False),
         ("dont record this", False),
-        ("稍微有点想法", False),
+        ("Somewhat think", False),
         ("somewhat think", False),
-        ("今天天气不错", False),
+        ("The weather is nice today", False),
         ("the weather is nice", False),
     ]
     
-    print("\n【Test Results】")
+    print("\n[Test Results]")
     for text, expected in test_cases:
         result = trigger.analyze(text)
-        status = "✓" if result.triggered == expected else "✗"
+        status = "PASS" if result.triggered == expected else "FAIL"
         
         print(f"\n{status} Text: {text}")
         print(f"  Expected: {expected}, Actual: {result.triggered}")
@@ -222,5 +222,5 @@ if __name__ == "__main__":
         print(f"  Keywords: {result.keywords}")
     
     print("\n" + "=" * 60)
-    print("✓ Test Complete")
+    print("Test Complete")
     print("=" * 60)

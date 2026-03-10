@@ -44,21 +44,19 @@ We follow these coding standards:
 
 ---
 
-# 中文简介
+# Welcome to Contribute!
 
-欢迎贡献！
+## Coding Standards
 
-## 编码风格
+- **PEP 8** - Python official style
+- **Google Style** - Docstrings
+- **Type Hints** - Required in function signatures
+- **VNPY Style** - Data classes for readability
+- **AlphaAlgo Practice** - Internal project best practices
 
-- **PEP 8** - Python 官方风格
-- **Google Style** - 文档字符串
-- **类型提示** - 函数签名必须
-- **VNPY 风格** - 数据用类封装，可读性优先
-- **AlphaAlgo 实践** - 内部项目经验沉淀
+## Code Review Principles
 
-## 代码审查原则
-
-1. 30秒内能看懂吗？
-2. 类型清晰吗？
-3. 错误处理恰当吗？
-4. 有没有魔法值？
+1. Can you understand it in 30 seconds?
+2. Is the type clear?
+3. Is error handling appropriate?
+4. Any magic values?

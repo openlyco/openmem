@@ -19,14 +19,14 @@ class TestMemoryManager:
     
     def test_add_memory(self, temp_project):
         memory = MemoryManager(project_path=temp_project)
-        memory_id = memory.add("测试记忆", "decision", tags=["test"])
+        memory_id = memory.add("Test memory", "decision", tags=["test"])
         assert memory_id > 0
         memory.close()
     
     def test_list_memory(self, temp_project):
         memory = MemoryManager(project_path=temp_project)
-        memory.add("测试1", "decision", tags=["test"])
-        memory.add("测试2", "milestone", tags=["test"])
+        memory.add("Test 1", "decision", tags=["test"])
+        memory.add("Test 2", "milestone", tags=["test"])
         
         results = memory.list(type="decision")
         assert len(results) >= 1
@@ -37,7 +37,7 @@ class TestMemoryManager:
     
     def test_search_memory(self, temp_project):
         memory = MemoryManager(project_path=temp_project)
-        memory.add("使用 JWT 认证", "decision", tags=["auth"])
+        memory.add("Use JWT for authentication", "decision", tags=["auth"])
         
         results = memory.search("JWT")
         assert len(results) >= 1
@@ -45,15 +45,15 @@ class TestMemoryManager:
     
     def test_search_chinese(self, temp_project):
         memory = MemoryManager(project_path=temp_project)
-        memory.add("数据库连接池配置", "knowledge", tags=["db"])
+        memory.add("Database connection pool config", "knowledge", tags=["db"])
         
-        results = memory.search("数据库")
+        results = memory.search("database")
         assert len(results) >= 1
         memory.close()
     
     def test_tags_search(self, temp_project):
         memory = MemoryManager(project_path=temp_project)
-        memory.add("测试", "decision", tags=["python", "test"])
+        memory.add("Test", "decision", tags=["python", "test"])
         
         results = memory.search_by_tags(["python"])
         assert len(results) >= 1
@@ -61,18 +61,18 @@ class TestMemoryManager:
     
     def test_update_memory(self, temp_project):
         memory = MemoryManager(project_path=temp_project)
-        memory_id = memory.add("原始内容", "decision")
+        memory_id = memory.add("Original content", "decision")
         
-        updated = memory.update(memory_id, content="更新内容")
+        updated = memory.update(memory_id, content="Updated content")
         assert updated is True
         
         results = memory.list()
-        assert any(r['content'] == "更新内容" for r in results)
+        assert any(r['content'] == "Updated content" for r in results)
         memory.close()
     
     def test_delete_memory(self, temp_project):
         memory = MemoryManager(project_path=temp_project)
-        memory_id = memory.add("待删除", "decision")
+        memory_id = memory.add("To be deleted", "decision")
         
         deleted = memory.delete(memory_id)
         assert deleted is True
@@ -81,7 +81,7 @@ class TestMemoryManager:
     def test_page_memory(self, temp_project):
         memory = MemoryManager(project_path=temp_project)
         for i in range(15):
-            memory.add(f"记忆 {i}", "decision")
+            memory.add(f"Memory {i}", "decision")
         
         page1 = memory.page(page=0, page_size=10)
         assert len(page1['messages']) == 10
