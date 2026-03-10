@@ -1,5 +1,5 @@
 """
-Memory 存储模块
+Memory Storage Module
 """
 
 from openmem.storage_sqlite import SQLiteStorage

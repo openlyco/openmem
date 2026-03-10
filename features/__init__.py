@@ -1,5 +1,5 @@
 """
-Memory 高级功能模块
+Memory Advanced Features Module
 """
 
 from openmem.features.encryption import CryptoManager, BackupManager, BackupType, BackupInfo, EncryptionError
