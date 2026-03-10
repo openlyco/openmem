@@ -124,7 +124,7 @@ class Organizer:
 
     def __init__(self, memory_dir: str = None):
         if memory_dir is None:
-            memory_dir = os.path.expanduser("~/.trae-memory")
+            memory_dir = os.path.expanduser("~/.openmem")
         
         self.memory_dir = memory_dir
         self.raw_dir = os.path.join(memory_dir, "raw")

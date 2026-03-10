@@ -1,4 +1,4 @@
-# Contributing to trae-memory
+# Contributing to OpenMem
 
 Contributions welcome! Please follow these guidelines.
 
@@ -6,8 +6,8 @@ Contributions welcome! Please follow these guidelines.
 
 ```bash
 # Clone repository
-git clone https://github.com/jcgokart/trae-memory.git
-cd trae-memory
+git clone https://github.com/jcgokart/openmem.git
+cd openmem
 
 # Create virtual environment
 python -m venv venv

@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-pip install trae-memory
+pip install openmem
 ```
 
 ## 1. Initialize

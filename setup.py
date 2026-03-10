@@ -4,14 +4,14 @@ with open("README.md", "r", encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name="trae-memory",
+    name="openmem",
     version="2.0.0",
     author="OpenAlgo",
     author_email="",
-    description="Memory System for Trae IDE",
+    description="Memory System for AI-powered Development",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/trae-memory",
+    url="https://github.com/yourusername/openmem",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",

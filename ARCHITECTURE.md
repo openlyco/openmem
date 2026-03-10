@@ -2,7 +2,7 @@
 
 ## Overview
 
-trae-memory is a project-level memory system for AI-powered development. It provides persistent memory storage with full-text search, version control, and IDE integration.
+OpenMem is a project-level memory system for AI-powered development. It provides persistent memory storage with full-text search, version control, and IDE integration.
 
 ## Architecture Diagram
 
@@ -115,6 +115,6 @@ Features inherited:
 ## IDE Integration
 
 - **Trae IDE**: `.memory/rules/project.md`
-- **VS Code**: `.vscode/trae-memory.md`
+- **VS Code**: `.vscode/openmem.md`
 
 Rules are auto-generated from memory content.
