@@ -6,73 +6,68 @@
 pip install openmem
 ```
 
+Or use the short alias:
+
+```bash
+pip install openmem
+```
+
 ## 1. Initialize
 
 ```bash
 # Project-level Memory
-memory init
+openmem init
+
+# Or use the alias
+mem init
 
 # Global Memory (shared across projects)
-memory init --global
+openmem init --global
+mem init --global
 ```
 
 ## 2. Add Memory
 
 ```bash
 # Auto-detect type (recommended)
-memory add "We decided to use PostgreSQL database"
+openmem add "We decided to use PostgreSQL database"
+mem add "We decided to use PostgreSQL database"
 
 # Specify type
-memory add "Completed user login feature" --type milestone
+openmem add "Completed user login feature" --type milestone
 
 # Add tags
-memory add "Use JWT for authentication" --tags auth,jwt
+openmem add "Use JWT for authentication" --tags auth,jwt
 ```
 
 ## 3. Search
 
 ```bash
 # Keyword search
-memory search PostgreSQL
+openmem search PostgreSQL
 
 # Tag search
-memory search --tag auth
+openmem search --tag auth
 ```
 
 ## 4. List
 
 ```bash
 # List all memories
-memory list
+openmem list
 
 # Filter by type
-memory list --type decision
+openmem list --type decision
 ```
 
-## 5. Generate Rules
+## As Python Library
 
-```bash
-# Generate .memory/rules/project.md
-memory rules
+```python
+from openmem import MemoryManager
+
+memory = MemoryManager()
+memory.add("Important decision here", type="decision")
+results = memory.search("PostgreSQL")
+for r in results:
+    print(r['content'])
 ```
-
----
-
-## Common Commands
-
-| Command | Description |
-|:---|:---|
-| `memory init` | Initialize |
-| `memory add "content"` | Add memory (auto-detect type) |
-| `memory search keyword` | Search |
-| `memory list` | List |
-| `memory rules` | Generate rules |
-| `memory backup` | Backup |
-| `memory version` | Version history |
-
----
-
-## Next Steps
-
-- See [USAGE.md](USAGE.md) for detailed usage
-- See [ARCHITECTURE.md](ARCHITECTURE.md) for architecture design

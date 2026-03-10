@@ -1,6 +1,6 @@
 """
-Memory CLI 工具
-支持交互式 init 和模板
+OpenMem CLI Tool
+Memory System for AI-powered Development
 """
 
 import os
@@ -14,15 +14,15 @@ from openmem.features.trigger import SmartTrigger
 
 
 def cmd_init(args):
-    """初始化 Memory"""
+    """Initialize Memory"""
     if args.global_init:
         memory_dir = os.path.expanduser("~/.memory")
     else:
         memory_dir = os.path.join(os.getcwd(), ".memory")
     
     if os.path.exists(memory_dir) and not args.force:
-        print(f"⚠️  Memory 已存在: {memory_dir}")
-        print(f"   使用 --force 强制重新初始化")
+        print(f"Warning: Memory already exists: {memory_dir}")
+        print(f"   Use --force to reinitialize")
         return
     
     os.makedirs(memory_dir, exist_ok=True)
@@ -31,15 +31,15 @@ def cmd_init(args):
     template = args.template or "minimal"
     
     if not args.yes:
-        print(f"\n📦 Memory 初始化")
-        print(f"   目录: {memory_dir}")
-        print(f"   项目: {project_name}")
-        print(f"   模板: {template}")
+        print(f"\nOpenMem Initialization")
+        print(f"   Directory: {memory_dir}")
+        print(f"   Project: {project_name}")
+        print(f"   Template: {template}")
         print()
         
-        confirm = input("确认初始化? [Y/n]: ").strip().lower()
+        confirm = input("Confirm? [Y/n]: ").strip().lower()
         if confirm and confirm != 'y':
-            print("已取消")
+            print("Cancelled")
             return
     
     config = _generate_config(project_name, template, args.global_init)
@@ -59,11 +59,11 @@ def cmd_init(args):
         with open(rules_path, 'w', encoding='utf-8') as f:
             f.write(rules_content)
     
-    print(f"\n✅ Memory 初始化完成: {memory_dir}")
-    print(f"   配置文件: {config_path}")
+    print(f"\nInitialized: {memory_dir}")
+    print(f"   Config: {config_path}")
     
     if template != "minimal":
-        print(f"   规则文件: {rules_path}")
+        print(f"   Rules: {rules_path}")
 
 
 def _generate_config(project_name: str, template: str, is_global: bool) -> dict:
@@ -461,94 +461,95 @@ def cmd_summary(args):
 
 
 def main():
-    """主入口"""
+    """Main entry point"""
     parser = argparse.ArgumentParser(
-        description="Memory 系统 CLI",
+        prog='openmem',
+        description='OpenMem - Memory System for AI-powered Development',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     
-    subparsers = parser.add_subparsers(dest='command', help='可用命令')
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
     
     # init
-    parser_init = subparsers.add_parser('init', help='初始化 Memory')
+    parser_init = subparsers.add_parser('init', help='Initialize Memory')
     parser_init.add_argument('--global', dest='global_init', action='store_true',
-                           help='初始化全局 Memory (~/.memory)')
+                           help='Initialize global Memory (~/.memory)')
     parser_init.add_argument('--template', choices=['minimal', 'standard', 'full'],
-                           help='选择模板')
+                           help='Select template')
     parser_init.add_argument('--ide', choices=['trae', 'vscode', 'both'], default='both',
-                           help='适配的 IDE (默认 both)')
-    parser_init.add_argument('--project-name', help='项目名称')
+                           help='Target IDE (default: both)')
+    parser_init.add_argument('--project-name', help='Project name')
     parser_init.add_argument('--yes', '-y', action='store_true',
-                           help='非交互模式')
+                           help='Non-interactive mode')
     parser_init.add_argument('--force', '-f', action='store_true',
-                           help='强制重新初始化')
+                           help='Force reinitialize')
     
     # status
-    parser_status = subparsers.add_parser('status', help='查看状态')
+    parser_status = subparsers.add_parser('status', help='Show status')
     parser_status.add_argument('--verbose', '-v', action='store_true',
-                              help='显示详细信息')
+                              help='Show detailed information')
     
     # add
-    parser_add = subparsers.add_parser('add', help='添加记忆')
-    parser_add.add_argument('content', help='记忆内容')
-    parser_add.add_argument('--type', default='auto', help='记忆类型 (auto/decision/milestone/issue/knowledge)')
-    parser_add.add_argument('--tags', help='标签（逗号分隔）')
-    parser_add.add_argument('--priority', type=int, default=0, help='优先级')
+    parser_add = subparsers.add_parser('add', help='Add memory')
+    parser_add.add_argument('content', help='Memory content')
+    parser_add.add_argument('--type', default='auto', help='Memory type (auto/decision/milestone/issue/knowledge)')
+    parser_add.add_argument('--tags', help='Tags (comma-separated)')
+    parser_add.add_argument('--priority', type=int, default=0, help='Priority')
     parser_add.add_argument('--scope', default='project', choices=['project', 'global'],
-                          help='作用域')
-    parser_add.add_argument('--project', help='项目路径')
+                          help='Scope')
+    parser_add.add_argument('--project', help='Project path')
     
-    # record - 自动记录对话
-    parser_record = subparsers.add_parser('record', help='记录对话到 raw')
-    parser_record.add_argument('--role', default='user', choices=['user', 'assistant'], help='角色')
-    parser_record.add_argument('content', help='对话内容')
+    # record
+    parser_record = subparsers.add_parser('record', help='Record conversation to raw')
+    parser_record.add_argument('--role', default='user', choices=['user', 'assistant'], help='Role')
+    parser_record.add_argument('content', help='Conversation content')
     
     # search
-    parser_search = subparsers.add_parser('search', help='搜索记忆')
-    parser_search.add_argument('query', help='搜索关键词')
-    parser_search.add_argument('--limit', type=int, default=10, help='结果数量')
+    parser_search = subparsers.add_parser('search', help='Search memories')
+    parser_search.add_argument('query', help='Search keyword')
+    parser_search.add_argument('--limit', type=int, default=10, help='Result count')
     parser_search.add_argument('--scope', default='project', 
                             choices=['project', 'global', 'both'],
-                            help='作用域')
-    parser_search.add_argument('--project', help='项目路径')
+                            help='Scope')
+    parser_search.add_argument('--project', help='Project path')
     
     # list
-    parser_list = subparsers.add_parser('list', help='列出记忆')
-    parser_list.add_argument('--type', help='记忆类型')
-    parser_list.add_argument('--limit', type=int, default=20, help='结果数量')
+    parser_list = subparsers.add_parser('list', help='List memories')
+    parser_list.add_argument('--type', help='Memory type')
+    parser_list.add_argument('--limit', type=int, default=20, help='Result count')
     parser_list.add_argument('--scope', default='project',
                             choices=['project', 'global'],
-                            help='作用域')
-    parser_list.add_argument('--project', help='项目路径')
+                            help='Scope')
+    parser_list.add_argument('--project', help='Project path')
     
     # page
-    parser_page = subparsers.add_parser('page', help='分页获取')
-    parser_page.add_argument('--page', type=int, default=0, help='页码')
-    parser_page.add_argument('--page-size', type=int, default=20, help='每页数量')
-    parser_page.add_argument('--type', help='记忆类型')
+    parser_page = subparsers.add_parser('page', help='Paginate memories')
+    parser_page.add_argument('--page', type=int, default=0, help='Page number')
+    parser_page.add_argument('--page-size', type=int, default=20, help='Page size')
+    parser_page.add_argument('--type', help='Memory type')
     parser_page.add_argument('--scope', default='project',
                            choices=['project', 'global'],
-                           help='作用域')
-    parser_page.add_argument('--project', help='项目路径')
+                           help='Scope')
+    parser_page.add_argument('--project', help='Project path')
     
     # organize
-    parser_org = subparsers.add_parser('organize', help='整理会议纪要')
-    parser_org.add_argument('--date', help='日期 (YYYY-MM-DD，默认今天)')
-    parser_org.add_argument('--days', type=int, default=1, help='最近 N 天')
-    parser_org.add_argument('--session', help='指定会话 ID')
-    parser_org.add_argument('--dry-run', action='store_true', help='仅预览，不保存')
-    parser_org.add_argument('--auto', action='store_true', help='自动调用 AI 整理')
+    parser_org = subparsers.add_parser('organize', help='Organize meeting notes')
+    parser_org.add_argument('--date', help='Date (YYYY-MM-DD, default today)')
+    parser_org.add_argument('--days', type=int, default=1, help='Recent N days')
+    parser_org.add_argument('--session', help='Session ID')
+    parser_org.add_argument('--dry-run', action='store_true', help='Preview only, do not save')
+    parser_org.add_argument('--auto', action='store_true', help='Auto organize with AI')
     parser_org.add_argument('--llm', default='ollama', choices=['ollama', 'deepseek', 'openai'],
-                        help='LLM 提供商 (默认 ollama 本地免费)')
+                        help='LLM provider (default: ollama)')
     
     # raw
-    parser_raw = subparsers.add_parser('raw', help='查看原始记录')
-    parser_raw.add_argument('--date', help='日期 (YYYY-MM-DD，默认今天)')
-    parser_raw.add_argument('--limit', type=int, default=50, help='显示条数')
+    parser_raw = subparsers.add_parser('raw', help='View raw records')
+    parser_raw.add_argument('--date', help='Date (YYYY-MM-DD, default today)')
+    parser_raw.add_argument('--limit', type=int, default=50, help='Display count')
     
     # summary
-    parser_summary = subparsers.add_parser('summary', help='查看纪要')
-    parser_summary.add_argument('--date', help='日期 (YYYY-MM-DD，默认今天)')
+    parser_summary = subparsers.add_parser('summary', help='View summary')
+    parser_summary.add_argument('--date', help='Date (YYYY-MM-DD, default today)')
     
     args = parser.parse_args()
     
