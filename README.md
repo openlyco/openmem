@@ -45,13 +45,30 @@ OpenClaw showed us the way. We're continuing that evolution - breaking context l
 
 ## Philosophy: Skills vs Knowledge
 
-**The Difference Between Knowing and Doing**
+**Knowledge vs Capability**
 
-Most AI memory systems focus on **knowledge** - storing documents, files, and information you can look up. They use RAG technology to build massive knowledge bases. But here's the truth:
+Most AI memory systems today are just **document repositories** - you dump files in, then search to find what you need. But here's the truth:
 
-> **Knowledge is not ability.**
-> Knowing how to swim won't make you a swimmer.
-> Knowing 1000 recipes won't make you a chef.
+> You don't know it until you search it.
+> Even after searching, it may not become yours.
+
+**Knowledge is power** - but the knowledge in these systems is:
+- Other people's knowledge
+- Public consensus
+- External information
+
+It's NOT **your** knowledge until you've internalized it.
+
+What OpenMem stores is different:
+
+- 🎯 **Your decisions** - not what others decided
+- 🔧 **Your experience** - not what others experienced  
+- 💡 **Your insights** - not what others thought
+- ⚔️ **Your capabilities** - your toolkit, your eighteen weapons
+
+This is **your capability**, not just information.
+
+---
 
 ### A Personal Journey
 
@@ -180,14 +197,25 @@ memory.close()
 
 ### 核心理念
 
-我们相信：**知识不是能力**。
+现在的个人知识库就是一个**资料库**——你把文件塞进去，用的时候再搜。但真相是：
 
-现有的 AI 记忆系统都在追求"大而全"——把天下知识都存进来。但真正有价值的是**你身上的本事**：
-- 你踩过哪些坑？
-- 你精通哪些工具？
-- 你做过哪些决策？
+> 你不搜你就不知道。
+> 搜到了，也不一定是你的。
 
-这才是你的**十八般兵器**。
+**知识就是力量**——但这些系统存的是：
+- 别人的知识
+- 天下共识
+- 外部信息
+
+只有你**内化**了，才是你的知识。
+
+OpenMem 存的是你的：
+- 🎯 **你的决策**——不是别人做的决定
+- 🔧 **你的经验**——不是别人的经历
+- 💡 **你的领悟**——不是别人的想法
+- ⚔️ **你的能力**——你的十八般兵器
+
+这才是**你的能力**，不只是信息。
 
 ### 我们的目标
 
