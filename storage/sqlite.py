@@ -1,6 +1,6 @@
 """
 Memory SQLite Storage Implementation
-Optimized version based on pilot_d_Memory
+High-performance SQLite backend with FTS5 full-text search
 """
 
 import sqlite3
